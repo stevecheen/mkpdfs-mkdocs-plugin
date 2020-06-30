@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import codecs
 from uuid import uuid4
 from timeit import default_timer as timer
 
@@ -56,6 +57,8 @@ class Generator(object):
         pdf_path = os.path.join(self.mkdconfig['site_dir'],
         self.config['output_path'])
         os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
+        #with codecs.open(pdf_path+'.html', "w","utf-8") as file:
+        #    file.write(str(self.html))
         html = HTML(string=str(self.html)).write_pdf(pdf_path,
         font_config=font_config)
         self.logger.log(msg='The PDF version of the documentation has been generated.', level=logging.INFO,)
@@ -143,8 +146,6 @@ class Generator(object):
         for n in self.nav:
             if n.is_page and n.meta != None and 'pdf' in n.meta \
             and n.meta['pdf'] == False:
-                continue
-            if hasattr(n, 'url'):
                 # Skip toc generation for external links
                 continue
             h3 = self.html.new_tag('h3')
